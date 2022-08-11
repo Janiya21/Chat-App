@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -30,6 +31,10 @@ public class ServerFormController {
     Socket accept=null;
 
     public void initialize(){
+
+        HBox hBox = new HBox();
+        hBox.setSpacing(20);
+
         new Thread(() -> {
             try {
                 ServerSocket serverSocket = new ServerSocket(5000);
@@ -41,28 +46,27 @@ public class ServerFormController {
 
                 while(true){
                     if(!record.equals("esc")){
+
                         InputStreamReader inputStreamReader = new InputStreamReader(accept.getInputStream());
                         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                         record = bufferedReader.readLine();
-                        txtMsgBox.setText(record);
+                        txtMsgBox.appendText("Client > "+record);
+
+                        String finalRecord = record;
+                        Platform.runLater(new Runnable() {
+                            @Override public void run() {
+                                vbox_message.getChildren().add( new Text( "Item " + finalRecord));
+                            }
+                        });
+
                         System.out.println(record);
                     }
                 }
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }).start();
-
-       /* // new
-        vbox_message.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                sp_main.setVvalue((Double)newValue);
-            }
-        });*/
     }
 
     public void sendOnAction(ActionEvent actionEvent) throws IOException {
@@ -70,18 +74,5 @@ public class ServerFormController {
         PrintWriter printWriter = new PrintWriter(accept.getOutputStream());
         printWriter.println(mg);
         printWriter.flush();
-
-       /* //new
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_RIGHT);
-        hBox.setPadding(new Insets(5,5,5,10));
-
-        Text text = new Text(mg);
-        TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle("-fx-color: rgb(239,242,255); -fx-background-color: rgb(15,125,242); -fx-border-radius: 20px");
-        text.setFill(Color.color(0.934, 9.945, 0.996));
-
-        hBox.getChildren().add(textFlow);
-        vbox_message.getChildren().add(hBox);*/
     }
 }

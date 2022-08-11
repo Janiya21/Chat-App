@@ -27,7 +27,7 @@ public class ClientFormController {
                         InputStreamReader inputStreamReader = new InputStreamReader(socket.getInputStream());
                         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                         record = bufferedReader.readLine();
-                        txtMgBox.setText(record);
+                        txtMgBox.appendText(record);
                         System.out.println(record);
                     }
                 }
