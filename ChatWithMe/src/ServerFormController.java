@@ -4,10 +4,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -22,7 +19,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerFormController {
-    public TextArea txtMsgBox;
     public TextField txtSendMessage;
     public ScrollPane sp_main;
     public VBox vbox_message;
@@ -50,12 +46,11 @@ public class ServerFormController {
                         InputStreamReader inputStreamReader = new InputStreamReader(accept.getInputStream());
                         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                         record = bufferedReader.readLine();
-                        txtMsgBox.appendText("Client > "+record);
 
                         String finalRecord = record;
                         Platform.runLater(new Runnable() {
                             @Override public void run() {
-                                vbox_message.getChildren().add( new Text( "Item " + finalRecord));
+                                vbox_message.getChildren().add( new Text( "  Client : "+finalRecord));
                             }
                         });
 
@@ -73,6 +68,14 @@ public class ServerFormController {
         String mg =  txtSendMessage.getText();
         PrintWriter printWriter = new PrintWriter(accept.getOutputStream());
         printWriter.println(mg);
+
+        Label lbl = new Label(mg + " : You  ");
+        HBox hBox=new HBox();
+        hBox.getChildren().add(lbl);
+        hBox.setAlignment(Pos.BASELINE_RIGHT);
+        vbox_message.getChildren().add(hBox);
+        vbox_message.setSpacing(10);
+
         printWriter.flush();
     }
 }
