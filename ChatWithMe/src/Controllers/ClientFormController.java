@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 public class ClientFormController {
 
@@ -27,6 +28,7 @@ public class ClientFormController {
     public ImageView myImageView;
 
     Socket socket = null;
+    BufferedImage bufferedImage=null;
 
     public void initialize() throws IOException {
         new Thread(()->{
@@ -60,7 +62,8 @@ public class ClientFormController {
 
     public void sendOnAction(ActionEvent actionEvent) throws IOException {
         String msg = txtClientMessage.getText();
-        PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+        OutputStream outputStream = socket.getOutputStream();
+        PrintWriter printWriter = new PrintWriter(outputStream);
         printWriter.println(msg);
 
         Label lbl = new Label(msg + " : You  ");
@@ -75,7 +78,7 @@ public class ClientFormController {
 
     private void openFile(File file) {
         try {
-            BufferedImage bufferedImage = ImageIO.read(file);
+            bufferedImage = ImageIO.read(file);
             WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
             myImageView.setImage(image);
         } catch (IOException ex) {
@@ -94,5 +97,17 @@ public class ClientFormController {
         if (file != null) {
             openFile(file);
         }
+    }
+
+    public void sendImageOnAction(ActionEvent actionEvent) throws IOException {
+        OutputStream outputStream = socket.getOutputStream();
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "jpg", byteArrayOutputStream);
+        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+        outputStream.write(size);
+        outputStream.write(byteArrayOutputStream.toByteArray());
+        outputStream.flush();
+        System.out.println("Flushed: " + System.currentTimeMillis());
     }
 }

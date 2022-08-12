@@ -19,8 +19,10 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 public class ServerFormController {
     public TextField txtSendMessage;
@@ -54,10 +56,27 @@ public class ServerFormController {
                         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                         record = bufferedReader.readLine();
 
+                        ReceiveImage();
                         String finalRecord = record;
+
                         Platform.runLater(new Runnable() {
                             @Override public void run() {
-                                vbox_message.getChildren().add( new Text( "  Client : "+finalRecord));
+                                //vbox_message.getChildren().add( new Text( "  Client : "+finalRecord));
+                                File file = new File("C:\\Users\\JANITH\\Desktop\\Desktop All Here\\Java All\\" +
+                                        "Chat App\\Java Socket Chat-App\\ChatWithMe\\src\\assets\\uploadedImages\\test2.jpg");
+                                BufferedImage read = null;
+                                try {
+                                    read = ImageIO.read(file);
+                                } catch (IOException e) {
+                                    System.out.println("oh nooo!");
+                                }
+                                assert read != null;
+                                WritableImage image = SwingFXUtils.toFXImage(read, null);
+                                ImageView imageView = new ImageView();
+                                imageView.setImage(image);
+                                imageView.setFitHeight(90);
+                                imageView.setFitWidth(140);
+                                vbox_message.getChildren().add(imageView);
                             }
                         });
 
@@ -86,26 +105,26 @@ public class ServerFormController {
         printWriter.flush();
     }
 
-    /*private void openFile(File file) {
-        try {
-            BufferedImage bufferedImage = ImageIO.read(file);
-            WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
-            myImageView.setImage(image);
-        } catch (IOException ex) {
-            System.out.println("Oops Not Loaded..");
-        }
-    }*/
-
     public void openFileOnAction(ActionEvent actionEvent) {
-        /*final FileChooser fileChooser = new FileChooser();
 
-        FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
-        FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
-        fileChooser.getExtensionFilters().addAll(extFilterJPG, extFilterPNG);
+    }
 
-        File file = fileChooser.showOpenDialog(sp_main.getScene().getWindow());
-        if (file != null) {
-            openFile(file);
-        }*/
+    public BufferedImage ReceiveImage() throws IOException {
+        InputStream inputStream = accept.getInputStream();
+
+        byte[] sizeAr = new byte[4];
+        inputStream.read(sizeAr);
+
+        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+
+        byte[] imageAr = new byte[size];
+        inputStream.read(imageAr);
+
+
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+        ImageIO.write(image, "jpg", new File("C:\\Users\\JANITH\\Desktop\\Desktop All Here\\" +
+                "Java All\\Chat App\\Java Socket Chat-App\\ChatWithMe\\src\\assets\\uploadedImages\\test2.jpg"));
+
+        return image;
     }
 }

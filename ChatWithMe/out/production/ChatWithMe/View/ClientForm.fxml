@@ -24,7 +24,8 @@
                   <VBox fx:id="vbox_message" prefHeight="504.0" prefWidth="673.0" style="-fx-background-color: #e6e6ff;" />
                </content>
             </ScrollPane>
-            <Button fx:id="openButton" layoutX="498.0" layoutY="583.0" mnemonicParsing="false" onAction="#openFileOnAction" style="-fx-background-radius: 20px;" text="Browse" />
+            <Button fx:id="openButton" layoutX="440.0" layoutY="583.0" mnemonicParsing="false" onAction="#openFileOnAction" style="-fx-background-radius: 20px;" text="Browse" />
+            <Button fx:id="btnSendImage" layoutX="513.0" layoutY="583.0" mnemonicParsing="false" onAction="#sendImageOnAction" style="-fx-background-radius: 20px;" text="Send" />
          </children>
       </Pane>
       <Label layoutX="363.0" layoutY="35.0" prefHeight="39.0" prefWidth="179.0" text="Client-Side">
