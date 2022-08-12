@@ -1,17 +1,20 @@
 package Controllers;
 
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.Socket;
 
 public class ClientFormController {
@@ -20,6 +23,8 @@ public class ClientFormController {
     public ScrollPane sp_main;
     public VBox vbox_message;
     public Button btnSend;
+    public Button openButton;
+    public ImageView myImageView;
 
     Socket socket = null;
 
@@ -66,5 +71,28 @@ public class ClientFormController {
         vbox_message.setSpacing(10);
 
         printWriter.flush();
+    }
+
+    private void openFile(File file) {
+        try {
+            BufferedImage bufferedImage = ImageIO.read(file);
+            WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
+            myImageView.setImage(image);
+        } catch (IOException ex) {
+            System.out.println("Oops Not Loaded..");
+        }
+    }
+
+    public void openFileOnAction(ActionEvent actionEvent) {
+        final FileChooser fileChooser = new FileChooser();
+
+        FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
+        FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
+        fileChooser.getExtensionFilters().addAll(extFilterJPG, extFilterPNG);
+
+        File file = fileChooser.showOpenDialog(sp_main.getScene().getWindow());
+        if (file != null) {
+            openFile(file);
+        }
     }
 }

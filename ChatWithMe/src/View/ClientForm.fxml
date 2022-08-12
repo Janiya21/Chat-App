@@ -24,6 +24,7 @@
                   <VBox fx:id="vbox_message" prefHeight="504.0" prefWidth="673.0" style="-fx-background-color: #e6e6ff;" />
                </content>
             </ScrollPane>
+            <Button fx:id="openButton" layoutX="498.0" layoutY="583.0" mnemonicParsing="false" onAction="#openFileOnAction" style="-fx-background-radius: 20px;" text="Browse" />
          </children>
       </Pane>
       <Label layoutX="363.0" layoutY="35.0" prefHeight="39.0" prefWidth="179.0" text="Client-Side">
@@ -66,5 +67,6 @@
             <Image url="@../assets/images/message.png" />
          </image>
       </ImageView>
+      <ImageView fx:id="myImageView" fitHeight="179.0" fitWidth="200.0" layoutX="29.0" layoutY="516.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>
