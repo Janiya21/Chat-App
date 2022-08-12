@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 public class ServerInitializer extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("ServerForm.fxml"))));
+        primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/ServerForm.fxml"))));
         primaryStage.show();
     }
 }
