@@ -29,12 +29,22 @@ public class ClientFormController {
 
     Socket socket = null;
     BufferedImage bufferedImage=null;
+    Socket textSocket = null;
 
     public void initialize() throws IOException {
+
+        new Thread(()->{
+            System.out.println("huk");
+            try {
+                textSocket = new Socket("localhost",4000);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
         new Thread(()->{
             try {
                 socket = new Socket("localhost",5000);
-
                 String record="";
 
                 while(true){
@@ -62,7 +72,7 @@ public class ClientFormController {
 
     public void sendOnAction(ActionEvent actionEvent) throws IOException {
         String msg = txtClientMessage.getText();
-        OutputStream outputStream = socket.getOutputStream();
+        OutputStream outputStream = textSocket.getOutputStream();
         PrintWriter printWriter = new PrintWriter(outputStream);
         printWriter.println(msg);
 
@@ -76,17 +86,7 @@ public class ClientFormController {
         printWriter.flush();
     }
 
-    private void openFile(File file) {
-        try {
-            bufferedImage = ImageIO.read(file);
-            WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
-            myImageView.setImage(image);
-        } catch (IOException ex) {
-            System.out.println("Oops Not Loaded..");
-        }
-    }
-
-    public void openFileOnAction(ActionEvent actionEvent) {
+    public void openFileOnAction(ActionEvent actionEvent) throws IOException {
         final FileChooser fileChooser = new FileChooser();
 
         FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
@@ -95,11 +95,11 @@ public class ClientFormController {
 
         File file = fileChooser.showOpenDialog(sp_main.getScene().getWindow());
         if (file != null) {
-            openFile(file);
+            bufferedImage = ImageIO.read(file);
         }
     }
 
-    public void sendImageOnAction(ActionEvent actionEvent) throws IOException {
+    public void sendImageOnAction(ActionEvent actionEvent) throws IOException, InterruptedException {
         OutputStream outputStream = socket.getOutputStream();
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -107,7 +107,18 @@ public class ClientFormController {
         byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
         outputStream.write(size);
         outputStream.write(byteArrayOutputStream.toByteArray());
+
+        WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
+        ImageView imageView = new ImageView();
+        imageView.setImage(image);
+        imageView.setFitHeight(90);
+        imageView.setFitWidth(140);
+        HBox hBox=new HBox();
+        hBox.getChildren().add(imageView);
+        hBox.setAlignment(Pos.BASELINE_RIGHT);
+        vbox_message.getChildren().add(hBox);
+
         outputStream.flush();
-        System.out.println("Flushed: " + System.currentTimeMillis());
+        System.out.println("Flushed By Client: " + System.currentTimeMillis());
     }
 }

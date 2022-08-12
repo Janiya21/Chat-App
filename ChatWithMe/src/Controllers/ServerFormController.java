@@ -13,13 +13,11 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -29,11 +27,11 @@ public class ServerFormController {
     public ScrollPane sp_main;
     public VBox vbox_message;
     public Button btnSend;
-    private final Desktop desktop = Desktop.getDesktop();
     public Button openButton;
     public ImageView myImageView;
 
     Socket accept=null;
+    Socket acceptText=null;
 
     public void initialize(){
 
@@ -42,51 +40,68 @@ public class ServerFormController {
 
         new Thread(() -> {
             try {
-                ServerSocket serverSocket = new ServerSocket(5000);
-                System.out.println("Server Started!");
-                accept = serverSocket.accept();
+                ServerSocket serverSocket1 = new ServerSocket(4000);
+                System.out.println("Text Server port Started!");
+                acceptText = serverSocket1.accept();
                 System.out.println("Client Connected!");
 
                 String record="";
 
                 while(true){
-                    if(!record.equals("esc")){
+                    InputStreamReader inputStreamReader = new InputStreamReader(acceptText.getInputStream());
+                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                    record = bufferedReader.readLine();
 
-                        InputStreamReader inputStreamReader = new InputStreamReader(accept.getInputStream());
-                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                        record = bufferedReader.readLine();
+                    System.out.println(record + " rec");
+                    String finalRecord = record;
 
-                        ReceiveImage();
-                        String finalRecord = record;
+                    Platform.runLater(new Runnable() {
+                        @Override public void run() {
+                            vbox_message.getChildren().add( new Text( "  Client : "+finalRecord));
+                        }
+                    });
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        new Thread(() -> {
+            try {
+                ServerSocket serverSocket = new ServerSocket(5000);
+                System.out.println("Image Server port Started!");
+                accept = serverSocket.accept();
+                System.out.println("Client Connected!");
+
+                while(true){
+
+                        BufferedImage imageX = ReceiveImage();
 
                         Platform.runLater(new Runnable() {
                             @Override public void run() {
-                                //vbox_message.getChildren().add( new Text( "  Client : "+finalRecord));
-                                File file = new File("C:\\Users\\JANITH\\Desktop\\Desktop All Here\\Java All\\" +
+
+                                System.out.println("In new thread");
+                                WritableImage image = SwingFXUtils.toFXImage(imageX, null);
+                                ImageView imageView = new ImageView();
+                                imageView.setImage(image);
+                                imageView.setFitHeight(90);
+                                imageView.setFitWidth(140);
+                                vbox_message.getChildren().add(imageView);
+
+                               /* File file = new File("C:\\Users\\JANITH\\Desktop\\Desktop All Here\\Java All\\" +
                                         "Chat App\\Java Socket Chat-App\\ChatWithMe\\src\\assets\\uploadedImages\\test2.jpg");
                                 BufferedImage read = null;
                                 try {
                                     read = ImageIO.read(file);
                                 } catch (IOException e) {
                                     System.out.println("oh nooo!");
-                                }
-                                assert read != null;
-                                WritableImage image = SwingFXUtils.toFXImage(read, null);
-                                ImageView imageView = new ImageView();
-                                imageView.setImage(image);
-                                imageView.setFitHeight(90);
-                                imageView.setFitWidth(140);
-                                vbox_message.getChildren().add(imageView);
+                                }*/
                             }
                         });
-
-                        System.out.println(record);
-                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }).start();
     }
 
@@ -114,16 +129,18 @@ public class ServerFormController {
 
         byte[] sizeAr = new byte[4];
         inputStream.read(sizeAr);
-
         int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
-
         byte[] imageAr = new byte[size];
         inputStream.read(imageAr);
 
+        System.out.println("avoooooooo");
 
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
-        ImageIO.write(image, "jpg", new File("C:\\Users\\JANITH\\Desktop\\Desktop All Here\\" +
-                "Java All\\Chat App\\Java Socket Chat-App\\ChatWithMe\\src\\assets\\uploadedImages\\test2.jpg"));
+
+        /*ImageIO.write(image, "jpg", new File("C:\\Users\\JANITH\\Desktop\\Desktop All Here\\" +
+                "Java All\\Chat App\\Java Socket Chat-App\\ChatWithMe\\src\\assets\\uploadedImages\\test2.jpg"));*/
+
+        System.out.println("avoooooooo 2");
 
         return image;
     }
