@@ -25,6 +25,11 @@
                </content>
             </ScrollPane>
             <Button fx:id="openButton" layoutX="499.0" layoutY="583.0" mnemonicParsing="false" onAction="#openFileOnAction" style="-fx-background-radius: 20px;" text="Browse" />
+            <Button layoutX="451.0" layoutY="583.0" mnemonicParsing="false" onAction="#emojiClickOnAction" style="-fx-background-radius: 25;" text=" ">
+               <graphic>
+                  <Label fx:id="lblEmojiOne" text=".." />
+               </graphic>
+            </Button>
          </children>
       </Pane>
       <Label layoutX="363.0" layoutY="35.0" prefHeight="23.0" prefWidth="170.0" text="Server-Side">

@@ -63,7 +63,6 @@ public class ClientFormController {
                         System.out.println(record);
                     }
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

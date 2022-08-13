@@ -29,11 +29,15 @@ public class ServerFormController {
     public Button btnSend;
     public Button openButton;
     public ImageView myImageView;
+    public Label lblEmojiOne;
 
     Socket accept=null;
     Socket acceptText=null;
 
     public void initialize(){
+
+        String context = new String(Character.toChars(0x1F349));
+        lblEmojiOne.setText(context);
 
         HBox hBox = new HBox();
         hBox.setSpacing(20);
@@ -133,15 +137,13 @@ public class ServerFormController {
         byte[] imageAr = new byte[size];
         inputStream.read(imageAr);
 
-        System.out.println("avoooooooo");
-
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
-
         /*ImageIO.write(image, "jpg", new File("C:\\Users\\JANITH\\Desktop\\Desktop All Here\\" +
                 "Java All\\Chat App\\Java Socket Chat-App\\ChatWithMe\\src\\assets\\uploadedImages\\test2.jpg"));*/
 
-        System.out.println("avoooooooo 2");
+        return ImageIO.read(new ByteArrayInputStream(imageAr));
+    }
 
-        return image;
+    public void emojiClickOnAction(ActionEvent actionEvent) {
+        txtSendMessage.setText(lblEmojiOne.getText());
     }
 }
