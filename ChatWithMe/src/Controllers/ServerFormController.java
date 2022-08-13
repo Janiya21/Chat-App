@@ -179,5 +179,22 @@ public class ServerFormController {
 
     }
 
+    public void emojiClickOnAction6(ActionEvent actionEvent) {
+        txtSendMessage.setText(txtSendMessage.getText()+lblEmojiOne6.getText());
 
+    }
+
+    public void emojiClickOnAction7(ActionEvent actionEvent) {
+        txtSendMessage.setText(txtSendMessage.getText()+lblEmojiOne7.getText());
+
+    }
+
+    public void emojiClickOnAction8(ActionEvent actionEvent) {
+        txtSendMessage.setText(txtSendMessage.getText()+lblEmojiOne8.getText());
+
+    }
+
+    public void btnDownEmojiBar(ActionEvent actionEvent) {
+        emojiPane.setVisible(false);
+    }
 }
