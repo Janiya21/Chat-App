@@ -56,10 +56,30 @@ public class ClientFormController {
         lblEmojiOne7.setText(new String(Character.toChars(0x1F914)));
         lblEmojiOne8.setText(new String(Character.toChars(0x1F642)));
 
+        HBox hBox = new HBox();
+        hBox.setSpacing(20);
+
         new Thread(()->{
             System.out.println("huk");
             try {
-                textSocket = new Socket("localhost",4000);
+                socket = new Socket("localhost",5000);
+
+                while(true){
+                    BufferedImage imageX = ReceiveImage();
+
+                    Platform.runLater(new Runnable() {
+                        @Override public void run() {
+
+                            System.out.println("In new thread");
+                            WritableImage image = SwingFXUtils.toFXImage(imageX, null);
+                            ImageView imageView = new ImageView();
+                            imageView.setImage(image);
+                            imageView.setFitHeight(90);
+                            imageView.setFitWidth(140);
+                            vbox_message.getChildren().add(imageView);
+                        }
+                    });
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -67,19 +87,19 @@ public class ClientFormController {
 
         new Thread(()->{
             try {
-                socket = new Socket("localhost",5000);
+                textSocket = new Socket("localhost",4000);
                 String record="";
 
                 while(true){
                     if(!record.equals("esc")){
-                        InputStreamReader inputStreamReader = new InputStreamReader(socket.getInputStream());
+                        InputStreamReader inputStreamReader = new InputStreamReader(textSocket.getInputStream());
                         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                         record = bufferedReader.readLine();
 
                         String finalRecord = record;
                         Platform.runLater(new Runnable() {
                             @Override public void run() {
-                                vbox_message.getChildren().add( new Text( "  Server : "+finalRecord));
+                                vbox_message.getChildren().add( new Text( "  "+finalRecord));
                             }
                         });
 
@@ -99,7 +119,7 @@ public class ClientFormController {
             PrintWriter printWriter = new PrintWriter(outputStream);
             printWriter.println(msg);
 
-            Label lbl = new Label(msg + " : You  ");
+            Label lbl = new Label(msg + "  ");
             HBox hBox=new HBox();
             hBox.getChildren().add(lbl);
             hBox.setAlignment(Pos.BASELINE_RIGHT);
@@ -109,7 +129,6 @@ public class ClientFormController {
             printWriter.flush();
         }else{
             OutputStream outputStream = socket.getOutputStream();
-
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, "jpg", byteArrayOutputStream);
             byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
@@ -129,7 +148,6 @@ public class ClientFormController {
             outputStream.flush();
             System.out.println("Flushed By Client: " + System.currentTimeMillis());
         }
-
     }
 
     public void openFileOnAction(ActionEvent actionEvent) throws IOException {
@@ -144,6 +162,20 @@ public class ClientFormController {
             bufferedImage = ImageIO.read(file);
         }
     }
+
+    public BufferedImage ReceiveImage() throws IOException {
+        InputStream inputStream = socket.getInputStream();
+
+        byte[] sizeAr = new byte[4];
+        inputStream.read(sizeAr);
+        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+        byte[] imageAr = new byte[size];
+        inputStream.read(imageAr);
+
+        return ImageIO.read(new ByteArrayInputStream(imageAr));
+    }
+
+    // Emoji Operations
 
     public void emojiClickOnAction(ActionEvent actionEvent) {
         emojiPane.setVisible(true);

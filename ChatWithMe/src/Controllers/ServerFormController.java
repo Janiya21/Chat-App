@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -44,6 +45,7 @@ public class ServerFormController {
 
     Socket accept=null;
     Socket acceptText=null;
+    BufferedImage bufferedImage=null;
 
     public void initialize(){
 
@@ -80,7 +82,7 @@ public class ServerFormController {
 
                     Platform.runLater(new Runnable() {
                         @Override public void run() {
-                            vbox_message.getChildren().add( new Text( "  Client : "+finalRecord));
+                            vbox_message.getChildren().add( new Text( "  "+finalRecord));
                         }
                     });
                 }
@@ -97,7 +99,6 @@ public class ServerFormController {
                 System.out.println("Client Connected!");
 
                 while(true){
-
                         BufferedImage imageX = ReceiveImage();
 
                         Platform.runLater(new Runnable() {
@@ -121,22 +122,52 @@ public class ServerFormController {
 
     public void sendOnAction(ActionEvent actionEvent) throws IOException {
         String mg =  txtSendMessage.getText();
-        PrintWriter printWriter = new PrintWriter(accept.getOutputStream());
-        printWriter.println(mg);
+        if(!mg.equals("")){
+            PrintWriter printWriter = new PrintWriter(acceptText.getOutputStream());
+            printWriter.println(mg);
 
-        Label lbl = new Label(mg + " : You  ");
-        HBox hBox=new HBox();
-        hBox.getChildren().add(lbl);
-        hBox.setAlignment(Pos.BASELINE_RIGHT);
-        vbox_message.getChildren().add(hBox);
-        vbox_message.setSpacing(10);
-        txtSendMessage.setText("");
+            Label lbl = new Label(mg + "  ");
+            HBox hBox=new HBox();
+            hBox.getChildren().add(lbl);
+            hBox.setAlignment(Pos.BASELINE_RIGHT);
+            vbox_message.getChildren().add(hBox);
+            vbox_message.setSpacing(10);
+            txtSendMessage.setText("");
+            printWriter.flush();
+        }else{
+            OutputStream outputStream = accept.getOutputStream();
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", byteArrayOutputStream);
+            byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+            outputStream.write(size);
+            outputStream.write(byteArrayOutputStream.toByteArray());
 
-        printWriter.flush();
+            WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
+            ImageView imageView = new ImageView();
+            imageView.setImage(image);
+            imageView.setFitHeight(90);
+            imageView.setFitWidth(140);
+            HBox hBox=new HBox();
+            hBox.getChildren().add(imageView);
+            hBox.setAlignment(Pos.BASELINE_RIGHT);
+            vbox_message.getChildren().add(hBox);
+
+            outputStream.flush();
+            System.out.println("Flushed By Server: " + System.currentTimeMillis());
+        }
     }
 
-    public void openFileOnAction(ActionEvent actionEvent) {
+    public void openFileOnAction(ActionEvent actionEvent) throws IOException {
+        final FileChooser fileChooser = new FileChooser();
 
+        FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
+        FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
+        fileChooser.getExtensionFilters().addAll(extFilterJPG, extFilterPNG);
+
+        File file = fileChooser.showOpenDialog(sp_main.getScene().getWindow());
+        if (file != null) {
+            bufferedImage = ImageIO.read(file);
+        }
     }
 
     public BufferedImage ReceiveImage() throws IOException {
