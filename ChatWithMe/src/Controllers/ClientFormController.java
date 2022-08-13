@@ -132,18 +132,7 @@ public class ClientFormController {
 
     }
 
-    public void openFileOnAction(ActionEvent actionEvent) throws IOException {
-        final FileChooser fileChooser = new FileChooser();
 
-        FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
-        FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
-        fileChooser.getExtensionFilters().addAll(extFilterJPG, extFilterPNG);
-
-        File file = fileChooser.showOpenDialog(sp_main.getScene().getWindow());
-        if (file != null) {
-            bufferedImage = ImageIO.read(file);
-        }
-    }
 
     public void emojiClickOnAction(ActionEvent actionEvent) {
         emojiPane.setVisible(true);
