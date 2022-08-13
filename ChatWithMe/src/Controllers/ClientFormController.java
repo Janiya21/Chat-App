@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -27,11 +28,33 @@ public class ClientFormController {
     public Button openButton;
     public ImageView myImageView;
 
+
+    public Pane emojiPane;
+    public Label lblEmojiOne1;
+    public Label lblEmojiOne2;
+    public Label lblEmojiOne3;
+    public Label lblEmojiOne4;
+    public Label lblEmojiOne5;
+    public Label lblEmojiOne6;
+    public Label lblEmojiOne7;
+    public Label lblEmojiOne8;
+
     Socket socket = null;
     BufferedImage bufferedImage=null;
     Socket textSocket = null;
 
     public void initialize() throws IOException {
+
+        emojiPane.setVisible(false);
+
+        lblEmojiOne1.setText(new String(Character.toChars(0x1F606)));
+        lblEmojiOne2.setText(new String(Character.toChars(0x1F601)));
+        lblEmojiOne3.setText(new String(Character.toChars(0x1F602)));
+        lblEmojiOne4.setText(new String(Character.toChars(0x1F609)));
+        lblEmojiOne5.setText(new String(Character.toChars(0x1F618)));
+        lblEmojiOne6.setText(new String(Character.toChars(0x1F610)));
+        lblEmojiOne7.setText(new String(Character.toChars(0x1F914)));
+        lblEmojiOne8.setText(new String(Character.toChars(0x1F642)));
 
         new Thread(()->{
             System.out.println("huk");
@@ -71,18 +94,42 @@ public class ClientFormController {
 
     public void sendOnAction(ActionEvent actionEvent) throws IOException {
         String msg = txtClientMessage.getText();
-        OutputStream outputStream = textSocket.getOutputStream();
-        PrintWriter printWriter = new PrintWriter(outputStream);
-        printWriter.println(msg);
+        if(!msg.equals("")){
+            OutputStream outputStream = textSocket.getOutputStream();
+            PrintWriter printWriter = new PrintWriter(outputStream);
+            printWriter.println(msg);
 
-        Label lbl = new Label(msg + " : You  ");
-        HBox hBox=new HBox();
-        hBox.getChildren().add(lbl);
-        hBox.setAlignment(Pos.BASELINE_RIGHT);
-        vbox_message.getChildren().add(hBox);
-        vbox_message.setSpacing(10);
+            Label lbl = new Label(msg + " : You  ");
+            HBox hBox=new HBox();
+            hBox.getChildren().add(lbl);
+            hBox.setAlignment(Pos.BASELINE_RIGHT);
+            vbox_message.getChildren().add(hBox);
+            vbox_message.setSpacing(10);
+            txtClientMessage.setText("");
+            printWriter.flush();
+        }else{
+            OutputStream outputStream = socket.getOutputStream();
 
-        printWriter.flush();
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", byteArrayOutputStream);
+            byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+            outputStream.write(size);
+            outputStream.write(byteArrayOutputStream.toByteArray());
+
+            WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
+            ImageView imageView = new ImageView();
+            imageView.setImage(image);
+            imageView.setFitHeight(90);
+            imageView.setFitWidth(140);
+            HBox hBox=new HBox();
+            hBox.getChildren().add(imageView);
+            hBox.setAlignment(Pos.BASELINE_RIGHT);
+            vbox_message.getChildren().add(hBox);
+
+            outputStream.flush();
+            System.out.println("Flushed By Client: " + System.currentTimeMillis());
+        }
+
     }
 
     public void openFileOnAction(ActionEvent actionEvent) throws IOException {
@@ -98,26 +145,48 @@ public class ClientFormController {
         }
     }
 
-    public void sendImageOnAction(ActionEvent actionEvent) throws IOException, InterruptedException {
-        OutputStream outputStream = socket.getOutputStream();
+    public void emojiClickOnAction(ActionEvent actionEvent) {
+        emojiPane.setVisible(true);
+    }
 
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ImageIO.write(bufferedImage, "jpg", byteArrayOutputStream);
-        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-        outputStream.write(size);
-        outputStream.write(byteArrayOutputStream.toByteArray());
+    public void emojiClickOnAction1(ActionEvent actionEvent) {
+        txtClientMessage.setText(txtClientMessage.getText()+lblEmojiOne1.getText());
+    }
 
-        WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
-        ImageView imageView = new ImageView();
-        imageView.setImage(image);
-        imageView.setFitHeight(90);
-        imageView.setFitWidth(140);
-        HBox hBox=new HBox();
-        hBox.getChildren().add(imageView);
-        hBox.setAlignment(Pos.BASELINE_RIGHT);
-        vbox_message.getChildren().add(hBox);
+    public void emojiClickOnAction2(ActionEvent actionEvent) {
+        txtClientMessage.setText(txtClientMessage.getText()+lblEmojiOne2.getText());
 
-        outputStream.flush();
-        System.out.println("Flushed By Client: " + System.currentTimeMillis());
+    }
+
+    public void emojiClickOnAction3(ActionEvent actionEvent) {
+        txtClientMessage.setText(txtClientMessage.getText()+lblEmojiOne3.getText());
+    }
+
+    public void emojiClickOnAction4(ActionEvent actionEvent) {
+        txtClientMessage.setText(txtClientMessage.getText()+lblEmojiOne4.getText());
+    }
+
+    public void emojiClickOnAction5(ActionEvent actionEvent) {
+        txtClientMessage.setText(txtClientMessage.getText()+lblEmojiOne5.getText());
+
+    }
+
+    public void emojiClickOnAction6(ActionEvent actionEvent) {
+        txtClientMessage.setText(txtClientMessage.getText()+lblEmojiOne6.getText());
+
+    }
+
+    public void emojiClickOnAction7(ActionEvent actionEvent) {
+        txtClientMessage.setText(txtClientMessage.getText()+lblEmojiOne7.getText());
+
+    }
+
+    public void emojiClickOnAction8(ActionEvent actionEvent) {
+        txtClientMessage.setText(txtClientMessage.getText()+lblEmojiOne8.getText());
+
+    }
+
+    public void btnDownEmojiBar(ActionEvent actionEvent) {
+        emojiPane.setVisible(false);
     }
 }

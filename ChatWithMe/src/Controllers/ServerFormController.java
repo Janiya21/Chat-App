@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -21,6 +22,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ServerFormController {
     public TextField txtSendMessage;
@@ -28,16 +31,32 @@ public class ServerFormController {
     public VBox vbox_message;
     public Button btnSend;
     public Button openButton;
-    public ImageView myImageView;
-    public Label lblEmojiOne;
+
+    public Pane emojiPane;
+    public Label lblEmojiOne1;
+    public Label lblEmojiOne2;
+    public Label lblEmojiOne3;
+    public Label lblEmojiOne4;
+    public Label lblEmojiOne5;
+    public Label lblEmojiOne6;
+    public Label lblEmojiOne7;
+    public Label lblEmojiOne8;
 
     Socket accept=null;
     Socket acceptText=null;
 
     public void initialize(){
 
-        String context = new String(Character.toChars(0x1F349));
-        lblEmojiOne.setText(context);
+        emojiPane.setVisible(false);
+
+        lblEmojiOne1.setText(new String(Character.toChars(0x1F606)));
+        lblEmojiOne2.setText(new String(Character.toChars(0x1F601)));
+        lblEmojiOne3.setText(new String(Character.toChars(0x1F602)));
+        lblEmojiOne4.setText(new String(Character.toChars(0x1F609)));
+        lblEmojiOne5.setText(new String(Character.toChars(0x1F618)));
+        lblEmojiOne6.setText(new String(Character.toChars(0x1F610)));
+        lblEmojiOne7.setText(new String(Character.toChars(0x1F914)));
+        lblEmojiOne8.setText(new String(Character.toChars(0x1F642)));
 
         HBox hBox = new HBox();
         hBox.setSpacing(20);
@@ -91,15 +110,6 @@ public class ServerFormController {
                                 imageView.setFitHeight(90);
                                 imageView.setFitWidth(140);
                                 vbox_message.getChildren().add(imageView);
-
-                               /* File file = new File("C:\\Users\\JANITH\\Desktop\\Desktop All Here\\Java All\\" +
-                                        "Chat App\\Java Socket Chat-App\\ChatWithMe\\src\\assets\\uploadedImages\\test2.jpg");
-                                BufferedImage read = null;
-                                try {
-                                    read = ImageIO.read(file);
-                                } catch (IOException e) {
-                                    System.out.println("oh nooo!");
-                                }*/
                             }
                         });
                 }
@@ -120,6 +130,7 @@ public class ServerFormController {
         hBox.setAlignment(Pos.BASELINE_RIGHT);
         vbox_message.getChildren().add(hBox);
         vbox_message.setSpacing(10);
+        txtSendMessage.setText("");
 
         printWriter.flush();
     }
@@ -137,13 +148,53 @@ public class ServerFormController {
         byte[] imageAr = new byte[size];
         inputStream.read(imageAr);
 
-        /*ImageIO.write(image, "jpg", new File("C:\\Users\\JANITH\\Desktop\\Desktop All Here\\" +
-                "Java All\\Chat App\\Java Socket Chat-App\\ChatWithMe\\src\\assets\\uploadedImages\\test2.jpg"));*/
-
         return ImageIO.read(new ByteArrayInputStream(imageAr));
     }
 
+    // Emoji Operations
+
     public void emojiClickOnAction(ActionEvent actionEvent) {
-        txtSendMessage.setText(lblEmojiOne.getText());
+        emojiPane.setVisible(true);
+    }
+
+    public void emojiClickOnAction1(ActionEvent actionEvent) {
+        txtSendMessage.setText(txtSendMessage.getText()+lblEmojiOne1.getText());
+    }
+
+    public void emojiClickOnAction2(ActionEvent actionEvent) {
+        txtSendMessage.setText(txtSendMessage.getText()+lblEmojiOne2.getText());
+
+    }
+
+    public void emojiClickOnAction3(ActionEvent actionEvent) {
+        txtSendMessage.setText(txtSendMessage.getText()+lblEmojiOne3.getText());
+    }
+
+    public void emojiClickOnAction4(ActionEvent actionEvent) {
+        txtSendMessage.setText(txtSendMessage.getText()+lblEmojiOne4.getText());
+    }
+
+    public void emojiClickOnAction5(ActionEvent actionEvent) {
+        txtSendMessage.setText(txtSendMessage.getText()+lblEmojiOne5.getText());
+
+    }
+
+    public void emojiClickOnAction6(ActionEvent actionEvent) {
+        txtSendMessage.setText(txtSendMessage.getText()+lblEmojiOne6.getText());
+
+    }
+
+    public void emojiClickOnAction7(ActionEvent actionEvent) {
+        txtSendMessage.setText(txtSendMessage.getText()+lblEmojiOne7.getText());
+
+    }
+
+    public void emojiClickOnAction8(ActionEvent actionEvent) {
+        txtSendMessage.setText(txtSendMessage.getText()+lblEmojiOne8.getText());
+
+    }
+
+    public void btnDownEmojiBar(ActionEvent actionEvent) {
+        emojiPane.setVisible(false);
     }
 }
