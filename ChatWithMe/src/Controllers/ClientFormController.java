@@ -105,10 +105,10 @@ public class ClientFormController {
                                 vbox_message.getChildren().add( new Text( "  "+finalRecord));
                             }
                         });
-
                         System.out.println(record);
                     }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -122,7 +122,7 @@ public class ClientFormController {
             PrintWriter printWriter = new PrintWriter(outputStream);
             printWriter.println(msg);
 
-            Label lbl = new Label(msg + "  ");
+            Label lbl = new Label(msg + " :  " + loggedUser);
             HBox hBox=new HBox();
             hBox.getChildren().add(lbl);
             hBox.setAlignment(Pos.BASELINE_RIGHT);
