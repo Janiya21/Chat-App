@@ -19,7 +19,7 @@
       <Pane layoutX="281.0" layoutY="99.0" prefHeight="638.0" prefWidth="709.0" style="-fx-background-color: #e6e6ff; -fx-background-radius: 20px;">
          <children>
             <TextField fx:id="txtClientMessage" layoutX="29.0" layoutY="570.0" prefHeight="48.0" prefWidth="542.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px;" />
-            <Button fx:id="btnSend" layoutX="590.0" layoutY="579.0" mnemonicParsing="false" onAction="#sendOnAction" prefHeight="39.0" prefWidth="94.0" style="-fx-background-radius: 20px;" text="Send" />
+            <Button fx:id="btnSend" layoutX="589.0" layoutY="575.0" mnemonicParsing="false" onAction="#sendOnAction" prefHeight="39.0" prefWidth="94.0" style="-fx-background-radius: 20px;" text="Send" />
             <ScrollPane fx:id="sp_main" layoutX="17.0" layoutY="54.0" prefHeight="506.0" prefWidth="676.0" style="-fx-background-color: #e6e6ff;">
                <content>
                   <VBox fx:id="vbox_message" prefHeight="504.0" prefWidth="674.0" style="-fx-background-color: #e6e6ff;" />
@@ -118,7 +118,7 @@
             </Pane>
          </children>
       </Pane>
-      <Label layoutX="363.0" layoutY="35.0" prefHeight="39.0" prefWidth="179.0" text="Client-Side">
+      <Label fx:id="lblUsername" layoutX="363.0" layoutY="35.0" prefHeight="39.0" prefWidth="179.0" text="Client-Side">
          <font>
             <Font name="Bell MT Bold" size="32.0" />
          </font>

@@ -38,13 +38,16 @@ public class ClientFormController {
     public Label lblEmojiOne6;
     public Label lblEmojiOne7;
     public Label lblEmojiOne8;
+    public Label lblUsername;
 
     Socket socket = null;
     BufferedImage bufferedImage=null;
     Socket textSocket = null;
+    String loggedUser = LoginFormController.userName;
 
     public void initialize() throws IOException {
 
+        lblUsername.setText(loggedUser);
         emojiPane.setVisible(false);
 
         lblEmojiOne1.setText(new String(Character.toChars(0x1F606)));
