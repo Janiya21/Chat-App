@@ -27,20 +27,15 @@ public class ServerThread extends Thread {
             //we have to do it manuallyy
              output = new PrintWriter(socket.getOutputStream(),true);
 
-
             //inifite loop for server
             while(true) {
                 String outputString = input.readLine();
-                //if user types exit command
                 if(outputString.equals("exit")) {
                     break;
                 }
                 printToALlClients(outputString);
-                //output.println("Server says " + outputString);
                 System.out.println("Server received " + outputString);
-
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();

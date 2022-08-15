@@ -1,5 +1,7 @@
 package server;
 
+import controllers.ServerFormController;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -7,7 +9,7 @@ import java.util.ArrayList;
 public class ServerMain {
 
     public static void main(String[] args) throws Exception{
-        //using serversocket as argument to automatically close the socket
+        //using serverSocket as argument to automatically close the socket
         //the port number is unique for each server
 
         //list to add all the clients thread
@@ -26,7 +28,7 @@ public class ServerMain {
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
+           e.printStackTrace();
         }
     }
 }
