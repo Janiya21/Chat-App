@@ -1,5 +1,6 @@
 package Controllers;
 
+import handler.ClientHandler;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -18,6 +19,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class ClientFormController {
 
@@ -45,28 +48,14 @@ public class ClientFormController {
     Socket textSocket = null;
     String loggedUser = LoginFormController.userName;
 
-    public void initialize() throws IOException {
-
+    public void initialize() {
         lblUsername.setText(loggedUser);
-        emojiPane.setVisible(false);
-
-        lblEmojiOne1.setText(new String(Character.toChars(0x1F606)));
-        lblEmojiOne2.setText(new String(Character.toChars(0x1F601)));
-        lblEmojiOne3.setText(new String(Character.toChars(0x1F602)));
-        lblEmojiOne4.setText(new String(Character.toChars(0x1F609)));
-        lblEmojiOne5.setText(new String(Character.toChars(0x1F618)));
-        lblEmojiOne6.setText(new String(Character.toChars(0x1F610)));
-        lblEmojiOne7.setText(new String(Character.toChars(0x1F914)));
-        lblEmojiOne8.setText(new String(Character.toChars(0x1F642)));
-
-        HBox hBox = new HBox();
-        hBox.setSpacing(20);
+        setEmojis();
 
         new Thread(()->{
-            System.out.println("huk");
             try {
                 socket = new Socket("localhost",5000);
-
+                System.out.println("In new Client Image Thread");
                 while(true){
                     BufferedImage imageX = ReceiveImage();
 
@@ -91,9 +80,11 @@ public class ClientFormController {
         new Thread(()->{
             try {
                 textSocket = new Socket("localhost",4000);
+                System.out.println("In new Client Text Thread");
                 String record="";
 
                 while(true){
+                    System.out.println("yooo um in while");
                     if(!record.equals("esc")){
                         InputStreamReader inputStreamReader = new InputStreamReader(textSocket.getInputStream());
                         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -106,8 +97,11 @@ public class ClientFormController {
                             }
                         });
                         System.out.println(record);
+                    }else {
+                        break;
                     }
                 }
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -122,14 +116,16 @@ public class ClientFormController {
             PrintWriter printWriter = new PrintWriter(outputStream);
             printWriter.println(msg);
 
-            Label lbl = new Label(msg + " :  " + loggedUser);
+            Label lbl = new Label(msg + "   ");
             HBox hBox=new HBox();
             hBox.getChildren().add(lbl);
             hBox.setAlignment(Pos.BASELINE_RIGHT);
             vbox_message.getChildren().add(hBox);
             vbox_message.setSpacing(10);
+            System.out.println("um getting flush");
             txtClientMessage.setText("");
             printWriter.flush();
+            System.out.println("um flushed");
         }else{
             OutputStream outputStream = socket.getOutputStream();
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -179,6 +175,21 @@ public class ClientFormController {
     }
 
     // Emoji Operations
+
+    public void setEmojis(){
+        emojiPane.setVisible(false);
+        lblEmojiOne1.setText(new String(Character.toChars(0x1F606)));
+        lblEmojiOne2.setText(new String(Character.toChars(0x1F601)));
+        lblEmojiOne3.setText(new String(Character.toChars(0x1F602)));
+        lblEmojiOne4.setText(new String(Character.toChars(0x1F609)));
+        lblEmojiOne5.setText(new String(Character.toChars(0x1F618)));
+        lblEmojiOne6.setText(new String(Character.toChars(0x1F610)));
+        lblEmojiOne7.setText(new String(Character.toChars(0x1F914)));
+        lblEmojiOne8.setText(new String(Character.toChars(0x1F642)));
+
+        HBox hBox = new HBox();
+        hBox.setSpacing(20);
+    }
 
     public void emojiClickOnAction(ActionEvent actionEvent) {
         emojiPane.setVisible(true);

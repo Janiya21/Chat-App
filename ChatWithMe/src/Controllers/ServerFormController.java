@@ -49,33 +49,26 @@ public class ServerFormController {
 
     public void initialize(){
 
-        emojiPane.setVisible(false);
-
-        lblEmojiOne1.setText(new String(Character.toChars(0x1F606)));
-        lblEmojiOne2.setText(new String(Character.toChars(0x1F601)));
-        lblEmojiOne3.setText(new String(Character.toChars(0x1F602)));
-        lblEmojiOne4.setText(new String(Character.toChars(0x1F609)));
-        lblEmojiOne5.setText(new String(Character.toChars(0x1F618)));
-        lblEmojiOne6.setText(new String(Character.toChars(0x1F610)));
-        lblEmojiOne7.setText(new String(Character.toChars(0x1F914)));
-        lblEmojiOne8.setText(new String(Character.toChars(0x1F642)));
-
-        HBox hBox = new HBox();
-        hBox.setSpacing(20);
+        setEmojis();
 
         new Thread(() -> {
             try {
+                System.out.println("created new Text Thread In Server");
                 ServerSocket serverSocket1 = new ServerSocket(4000);
                 System.out.println("Text Server port Started!");
                 acceptText = serverSocket1.accept();
-                System.out.println("Client Connected!");
+                System.out.println("Text Server port Connected!");
 
                 String record="";
 
                 while(true){
+
+                    System.out.println("In WHILE");
                     InputStreamReader inputStreamReader = new InputStreamReader(acceptText.getInputStream());
                     BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                     record = bufferedReader.readLine();
+
+                    System.out.println("hohohooo");
 
                     System.out.println(record + " rec");
                     String finalRecord = record;
@@ -93,10 +86,11 @@ public class ServerFormController {
 
         new Thread(() -> {
             try {
+                System.out.println("created new Image Thread In Server");
                 ServerSocket serverSocket = new ServerSocket(5000);
                 System.out.println("Image Server port Started!");
                 accept = serverSocket.accept();
-                System.out.println("Client Connected!");
+                System.out.println("Image Server port Connected!");
 
                 while(true){
                         BufferedImage imageX = ReceiveImage();
@@ -183,6 +177,21 @@ public class ServerFormController {
     }
 
     // Emoji Operations
+
+    public void setEmojis(){
+        emojiPane.setVisible(false);
+        lblEmojiOne1.setText(new String(Character.toChars(0x1F606)));
+        lblEmojiOne2.setText(new String(Character.toChars(0x1F601)));
+        lblEmojiOne3.setText(new String(Character.toChars(0x1F602)));
+        lblEmojiOne4.setText(new String(Character.toChars(0x1F609)));
+        lblEmojiOne5.setText(new String(Character.toChars(0x1F618)));
+        lblEmojiOne6.setText(new String(Character.toChars(0x1F610)));
+        lblEmojiOne7.setText(new String(Character.toChars(0x1F914)));
+        lblEmojiOne8.setText(new String(Character.toChars(0x1F642)));
+
+        HBox hBox = new HBox();
+        hBox.setSpacing(20);
+    }
 
     public void emojiClickOnAction(ActionEvent actionEvent) {
         emojiPane.setVisible(true);
