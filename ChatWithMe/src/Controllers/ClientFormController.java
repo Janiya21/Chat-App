@@ -47,6 +47,12 @@ public class ClientFormController {
     BufferedImage bufferedImage=null;
     Socket textSocket = null;
     String loggedUser = LoginFormController.userName;
+    BufferedReader bufferedReader;
+    InputStreamReader inputStreamReader;
+
+    public ClientFormController() throws IOException {
+        textSocket = new Socket("localhost",4000);
+    }
 
     public void initialize() {
         lblUsername.setText(loggedUser);
@@ -79,15 +85,14 @@ public class ClientFormController {
 
         new Thread(()->{
             try {
-                textSocket = new Socket("localhost",4000);
                 System.out.println("In new Client Text Thread");
                 String record="";
 
                 while(true){
-                    System.out.println("yooo um in while");
+                    System.out.println("yoo um in while");
                     if(!record.equals("esc")){
-                        InputStreamReader inputStreamReader = new InputStreamReader(textSocket.getInputStream());
-                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                        inputStreamReader = new InputStreamReader(textSocket.getInputStream());
+                        bufferedReader = new BufferedReader(inputStreamReader);
                         record = bufferedReader.readLine();
 
                         String finalRecord = record;
@@ -101,8 +106,6 @@ public class ClientFormController {
                         break;
                     }
                 }
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

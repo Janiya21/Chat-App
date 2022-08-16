@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../ChatInGroup/ChatInGroup.iml" filepath="$PROJECT_DIR$/../ChatInGroup/ChatInGroup.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ChatWithGroup/ChatWithGroup.iml" filepath="$PROJECT_DIR$/../ChatWithGroup/ChatWithGroup.iml" />
       <module fileurl="file://$PROJECT_DIR$/ChatWithMe.iml" filepath="$PROJECT_DIR$/ChatWithMe.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../GroupChat/GroupChat.iml" filepath="$PROJECT_DIR$/../GroupChat/GroupChat.iml" />
     </modules>
   </component>
 </project>
